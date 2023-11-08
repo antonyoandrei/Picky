@@ -18,7 +18,7 @@ const RegisterComponent = () => {
   const navigate = useNavigate();
 
   const onRegister: SubmitHandler<FormData> = (data) => {
-    login(data.username);
+    login(data.username, data.password, data.email);
     navigate('/', {
       replace: true
     });
