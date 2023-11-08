@@ -4,9 +4,6 @@ interface IUserDocument extends Document {
     email: string;
     name: string;
     password: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-
 }
 
 const UserSchema = new Schema<IUserDocument>({
