@@ -23,3 +23,11 @@
     width: 200px;
     object-fit: cover;
 }
+
+.fallback-text-2 {
+    font-size: var(--fs-l);
+    font-weight: var(--fw-medium);
+    color: var(--secondary);
+    display: flex;
+    justify-content: center;
+}

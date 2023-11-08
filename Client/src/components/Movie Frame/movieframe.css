@@ -49,6 +49,7 @@
     color: var(--secondary);
     display: flex;
     justify-content: center;
-    position: relative;
-    bottom: 200px;
+    position: absolute;
+    bottom: 150px;
+    left: 300px;
 }

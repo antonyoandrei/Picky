@@ -39,7 +39,7 @@ const UserModalComponent = ({ isVisible }: UserModalProps) => {
   
   return (
     <section className={modalClassName}>
-      <form className="modal-form" onSubmit={handleSubmit(onUpdate)}>
+      <form className="user-modal-form" onSubmit={handleSubmit(onUpdate)}>
         <input className="modal-input" type="text" placeholder="Update Email..." autoComplete="off" 
           {...register('email', { 
             required: 'Email is required',

@@ -35,6 +35,7 @@ const UserDetailsComponent = () => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('userImg');
+    localStorage.removeItem('movieSets')
     window.location.href = '/log-in';
   }
 
