@@ -4,7 +4,7 @@ interface IMovieDocument extends Document {
     name: string;
     poster_image: string;
     score: string;
-    genre: string;
+    genre: Schema.Types.ObjectId;
 }
 
 const MovieSchema = new Schema<IMovieDocument> (
@@ -22,7 +22,8 @@ const MovieSchema = new Schema<IMovieDocument> (
             required: [true, 'Score is required.']
         },
         genre: {
-            type: String,
+            type: Schema.Types.ObjectId,
+            ref: 'Genres',
             required: [true, 'Genre is required.']
         }
     },
