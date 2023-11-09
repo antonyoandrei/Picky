@@ -64,12 +64,18 @@
 .icon-tabler-trash-x {
     cursor: pointer;
     color: var(--secondary);
+    transition: color 0.2s;
+}
+
+.icon-tabler-trash-x:hover {
+    color: var(--clr-link);
 }
 
 .details-movie-info {
     display: flex;
     gap: 2rem;
     flex-direction: column;
+    color: var(--secondary);
 }
 
 .details-movie-info-title {
