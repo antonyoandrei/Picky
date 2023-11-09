@@ -3,11 +3,11 @@ import UserModel from '../model/user.model';
 
 export const getAllUsers = (req: Request, res: Response) => {
     res.status(200).send('Get All Users');
-}
+};
 
 export const getAllUsersRegistered = (req: Request, res: Response) => {
     res.status(200).send('Get All Users Registered');
-}
+};
 
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
@@ -23,19 +23,19 @@ export const createUser = async (req: Request, res: Response) => {
     }
 
     res.status(200).send('Post: Create user');
-}
+};
 
 export const getUserById = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     try {
-        const user = await UserModel.findById({ _id: userId });
+        const user = await UserModel.findById({ _id: userId }).populate('movies'); //.populate({path: 'movies.genre', model: 'movie', select: 'name -_id'});
 
         res.status(200).json(user);
     } catch (error) {
         res.status(500).json(error)
     }
-}
+};
 
 export const updateUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
@@ -54,7 +54,7 @@ export const updateUser = async (req: Request, res: Response) => {
     }
     
     res.status(200).send('User updated');
-}
+};
 
 export const deleteUser = (req: Request, res: Response) => {
     const {
@@ -64,4 +64,4 @@ export const deleteUser = (req: Request, res: Response) => {
     if (!userId) res.status(500).send('Not found');
     
     res.status(200).send('Delete: Delete user');
-}
+};

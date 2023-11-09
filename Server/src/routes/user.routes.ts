@@ -7,10 +7,9 @@ const userRoutes = Router();
 userRoutes.get('/', getAllUsers);
 userRoutes.get('/:userId', getUserById);
 userRoutes.patch('/:userId', updateUser);
+userRoutes.delete('/:userId', deleteUser);
+userRoutes.get('/registered', getAllUsersRegistered);
 
 userRoutes.post('/', check, createUser);
-userRoutes.delete('/:userId', deleteUser);
-
-userRoutes.get('/registered', getAllUsersRegistered);
 
 export default userRoutes;
