@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import MoviesModel from '../model/movies.model';
 import UserModel from '../model/user.model';
+import prisma from '../db/client';
 
 export const getAllMovies = async (req: Request, res: Response) => {
     try {
-        const movies = await MoviesModel.find();
-        res.status(200).json(movies);
+        const allMovies = await prisma.movies.findMany();
+        res.status(201).json(allMovies);
     } catch (error) {
         res.status(500).json(error);
     }
@@ -19,18 +20,12 @@ export const createMovie = async (req: Request, res: Response) => {
             throw new Error('Missing fields');
         }
 
-        const movie = await MoviesModel.create({
+        const movie = prisma.movies.create({data:{
             name,
             poster_image,
             score,
-            genre,
-            userId
-        });
-
-        await UserModel.findByIdAndUpdate(
-            { _id: userId },
-            { $push: { movies: movie._id } }
-        );
+            User: { connect: { id: userId } }
+    }});
 
         res.status(201).json(movie);
     } catch (error) {
@@ -42,7 +37,9 @@ export const getMovieById = async (req: Request, res: Response) => {
     const { movieId } = req.params;
 
     try {
-        const movie = await MoviesModel.findById({ _id: movieId }).populate('user').populate('genre');
+        const movie = await prisma.movies.findUnique({
+            where: { id: movieId } 
+        });
 
         res.status(200).json(movie);
     } catch (error) {
@@ -52,16 +49,15 @@ export const getMovieById = async (req: Request, res: Response) => {
 
 export const updateMovie = async (req: Request, res: Response) => {
     const { movieId } = req.params;
-    const { name, poster_image, score, genre } = req.body;
+    const { name, poster_image, score } = req.body;
 
     try {
-        const movie = await MoviesModel.findByIdAndUpdate(
-            { _id: movieId },
-            { $set: { name, poster_image, score, genre } },
-            { new: true }
-        );
+        const updatedMovie = await prisma.movies.update({
+            where: { id: movieId },
+            data: { name, poster_image, score }
+    });
 
-        res.status(201).json(movie);
+        res.status(201).json(updatedMovie);
     } catch (error) {
         res.status(500).json(error);
     }
@@ -71,11 +67,11 @@ export const deleteMovie = async (req: Request, res: Response) => {
     const { movieId } = req.params;
 
     try {
-        const movie = await MoviesModel.findByIdAndDelete({ _id: movieId });
+        const deletedMovie = await prisma.movies.delete({
+            where: { id: movieId }
+        });
 
-        if (!movie) throw new Error('Movie not found');
-
-        res.status(200).json(movie);
+        res.status(200).json(deletedMovie);
     } catch (error) {
         res.status(500).json(error);
     }
