@@ -12,24 +12,20 @@ export const getAllMovies = async (req: Request, res: Response) => {
 };
 
 export const createMovie = async (req: Request, res: Response) => {
-    const { name, poster_image, score, genre, userId } = req.body;
+    const { name, poster_image, score } = req.body;
+    const { userId } = req.params;
 
     try {
-        if (!name || !poster_image || !score || !genre || !userId) {
-            throw new Error('Missing fields');
-        }
-
         const movie = await MoviesModel.create({
             name,
             poster_image,
             score,
-            genre,
             userId
         });
 
         await UserModel.findByIdAndUpdate(
             { _id: userId },
-            { $push: { movies: movie._id } }
+            { $push: { movie: movie._id } }
         );
 
         res.status(201).json(movie);
@@ -72,8 +68,6 @@ export const deleteMovie = async (req: Request, res: Response) => {
 
     try {
         const movie = await MoviesModel.findByIdAndDelete({ _id: movieId });
-
-        if (!movie) throw new Error('Movie not found');
 
         res.status(200).json(movie);
     } catch (error) {

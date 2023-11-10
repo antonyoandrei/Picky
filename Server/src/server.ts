@@ -8,6 +8,6 @@ app.use(express.json());
 
 app.use("/user", userRoutes);
 app.use("/movie", moviesRoutes);
-app.use("/genres", genresRoutes);
+app.use("/genre", genresRoutes);
 
 export default app;

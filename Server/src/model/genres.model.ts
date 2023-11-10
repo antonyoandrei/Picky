@@ -14,6 +14,6 @@ const GenreSchema = new Schema<IGenreDocument> (
     { timestamps: true, versionKey: false }
 )
 
-const GenresModel = model<IGenreDocument>("Genres", GenreSchema);
+const GenresModel = model<IGenreDocument>("Genre", GenreSchema);
 
 export default GenresModel;

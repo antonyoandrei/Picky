@@ -8,7 +8,6 @@ genresRoutes.get('/', getAllGenres);
 genresRoutes.get('/:genreId', getGenreById);
 genresRoutes.patch('/:genreId', updateGenre);
 genresRoutes.delete('/:genreId', deleteGenre);
-
 genresRoutes.post('/', check, createGenre);
 
 export default genresRoutes;

@@ -4,7 +4,7 @@ interface IMovieDocument extends Document {
     name: string;
     poster_image: string;
     score: string;
-    genre: Schema.Types.ObjectId;
+    genre?: string[];
 }
 
 const MovieSchema = new Schema<IMovieDocument> (
@@ -21,15 +21,11 @@ const MovieSchema = new Schema<IMovieDocument> (
             type: String,
             required: [true, 'Score is required.']
         },
-        genre: {
-            type: Schema.Types.ObjectId,
-            ref: 'Genres',
-            required: [true, 'Genre is required.']
-        }
+        genre: [{ type: Schema.Types.ObjectId, ref: 'Genre'}]
     },
     { timestamps: true, versionKey: false }
 )
 
-const MoviesModel = model<IMovieDocument>("Movies", MovieSchema);
+const MoviesModel = model<IMovieDocument>("Movie", MovieSchema);
 
 export default MoviesModel;
