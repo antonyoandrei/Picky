@@ -1,0 +1,38 @@
+.home-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 80vh;
+}
+
+.frame-title-wrapper {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    margin-top: 30px;
+    margin-left: 300px;
+}
+
+.frame-title {
+    font-size: var(--fs-m);
+    font-weight: var(--fw-medium);
+    color: var(--secondary);
+}
+
+.see-all-btn {    
+    background-color: var(--secondary);
+    transition: background-color 0.2s;
+    height: 20px;
+    width: 60px;
+    cursor: pointer;
+}
+
+.see-all-btn:hover {    
+    background-color: var(--clr-link);
+}
+
+.see-all-text {
+    font-size: var(--fs-xxs);
+    color: var(--primary);
+    position: relative;
+    top: 2px;
+}
