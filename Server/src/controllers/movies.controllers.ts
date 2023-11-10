@@ -16,11 +16,8 @@ export const createMovie = async (req: Request, res: Response) => {
     const { name, poster_image, score, genre, userId } = req.body;
 
     try {
-        if (!name || !poster_image || !score || !genre || !userId) {
-            throw new Error('Missing fields');
-        }
 
-        const movie = prisma.movies.create({data:{
+        const movie = await prisma.movies.create({data:{
             name,
             poster_image,
             score,
