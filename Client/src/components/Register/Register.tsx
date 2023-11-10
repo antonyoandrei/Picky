@@ -43,12 +43,12 @@ const RegisterComponent = () => {
           {...register('username', { 
             required: 'Username is required', 
             minLength: {
-              value: 4,
-              message: 'Username must have at least 4 characters'
+              value: 3,
+              message: 'Username must have at least 3 characters'
             }, 
             maxLength: {
-              value: 20,
-              message: 'Username cannot be longer than 20 characters'
+              value: 15,
+              message: 'Username cannot be longer than 15 characters'
             }
           })}
         />

@@ -27,12 +27,12 @@ const LogInComponent = () => {
     <main className='login-component'>
       <h2 className='welcome-text'>Welcome to <p className='welcome-logo'>Picky</p></h2>
       <form className="form" onSubmit={handleSubmit(onLogin)}>
-        <input required className="input" type="text" placeholder="Username..." autoComplete="off" {...register('username', { required: true, minLength:4, maxLength:20 })} />
+        <input required className="input" type="text" placeholder="Username..." autoComplete="off" {...register('username', { required: true, minLength:3, maxLength:15 })} />
           {errors.username && (
             <span className='error-message'>
             {errors.username.type === 'required' && 'Username is required'}
-            {errors.username.type === 'minLength' && 'Username must have at least 4 characters'}
-            {errors.username.type === 'maxLength' && 'Username cannot be longer than 20 characters'}
+            {errors.username.type === 'minLength' && 'Username must have at least 3 characters'}
+            {errors.username.type === 'maxLength' && 'Username cannot be longer than 15 characters'}
             </span> 
             )}
         <input className="input" type="password" id="password" placeholder="Password..." autoComplete="off" {...register('password', { required: true, minLength: 6 })} />
