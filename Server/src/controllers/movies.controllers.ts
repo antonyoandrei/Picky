@@ -38,7 +38,7 @@ export const getMovieById = async (req: Request, res: Response) => {
     const { movieId } = req.params;
 
     try {
-        const movie = await MoviesModel.findById({ _id: movieId }).populate('user').populate('genre');
+        const movie = await MoviesModel.findById({ _id: movieId }).populate('genre');
 
         res.status(200).json(movie);
     } catch (error) {

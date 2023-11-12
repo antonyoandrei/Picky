@@ -8,6 +8,6 @@ userRoutes.get('/', getAllUsers);
 userRoutes.get('/:userId', getUserById);
 userRoutes.post('/', check, createUser);
 userRoutes.patch('/:userId', updateUser);
-userRoutes.delete('/:id', deleteUser);
+userRoutes.delete('/:userId', deleteUser);
 
 export default userRoutes;

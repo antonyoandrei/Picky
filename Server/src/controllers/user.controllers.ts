@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import UserModel from '../model/user.model';
+import MoviesModel from '../model/movies.model';
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
-        const user = await UserModel.find();
+        const user = await UserModel.find().populate('movie').populate('movie.genre');
         res.status(200).json(user);
     } catch (error) {
         res.status(500).json(error);
@@ -27,7 +28,7 @@ export const getUserById = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     try {
-        const user = await UserModel.findById({ _id: userId }).populate('movie');
+        const user = await UserModel.findById({ _id: userId }).populate('movie').populate('movie.genre');
 
         res.status(200).json(user);
     } catch (error) {
