@@ -5,7 +5,11 @@ import prisma from '../db/client';
 
 export const getAllMovies = async (req: Request, res: Response) => {
     try {
-        const allMovies = await prisma.movies.findMany();
+        const allMovies = await prisma.movies.findMany({
+            include: {
+                genres: true
+            }
+        });
         res.status(201).json(allMovies);
     } catch (error) {
         res.status(500).json(error);
@@ -13,17 +17,17 @@ export const getAllMovies = async (req: Request, res: Response) => {
 };
 
 export const createMovie = async (req: Request, res: Response) => {
-    const { name, poster_image, score, genre, userId } = req.body;
+    const { name, poster_image, score, genres } = req.body;
+    const { userId } = req.params;
 
     try {
-
         const movie = await prisma.movies.create({data:{
             name,
             poster_image,
             score,
+            genres,
             User: { connect: { id: userId } }
     }});
-
         res.status(201).json(movie);
     } catch (error) {
         res.status(500).json(error);
@@ -35,9 +39,11 @@ export const getMovieById = async (req: Request, res: Response) => {
 
     try {
         const movie = await prisma.movies.findUnique({
-            where: { id: movieId } 
+            where: { id: movieId },
+            include: {
+                genres: true
+            }
         });
-
         res.status(200).json(movie);
     } catch (error) {
         res.status(500).json(error);
@@ -46,12 +52,12 @@ export const getMovieById = async (req: Request, res: Response) => {
 
 export const updateMovie = async (req: Request, res: Response) => {
     const { movieId } = req.params;
-    const { name, poster_image, score } = req.body;
+    const { name, poster_image, score, genres } = req.body;
 
     try {
         const updatedMovie = await prisma.movies.update({
             where: { id: movieId },
-            data: { name, poster_image, score }
+            data: { name, poster_image, score, genres }
     });
 
         res.status(201).json(updatedMovie);
