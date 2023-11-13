@@ -5,7 +5,13 @@ import prisma from '../db/client';
 export const getAllUsers = async (req: Request, res: Response) => {
 
     try {
-        const allUsers = await prisma.user.findMany();
+        const allUsers = await prisma.user.findMany({
+            include: {
+                movies: {
+                    include: {genres: true}
+                }
+            }
+        });
         res.status(201).json(allUsers);
     } catch (error) {
         res.status(200).send('Get All Users');
