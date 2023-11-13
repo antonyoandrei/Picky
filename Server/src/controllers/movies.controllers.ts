@@ -19,13 +19,15 @@ export const getAllMovies = async (req: Request, res: Response) => {
 export const createMovie = async (req: Request, res: Response) => {
     const { name, poster_image, score, genres } = req.body;
     const { userId } = req.params;
+    console.log('movie created')
+    console.log( 'genres:',genres)
 
     try {
         const movie = await prisma.movies.create({data:{
             name,
             poster_image,
             score,
-            genres,
+            genres: { connect: genres.map((genre: String) => ({ id:genre })) },
             User: { connect: { id: userId } }
     }});
         res.status(201).json(movie);
