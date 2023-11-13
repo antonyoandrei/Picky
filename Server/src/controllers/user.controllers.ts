@@ -15,9 +15,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
-    try {
-        if (!name || !email || !password) throw new Error ('Missing fields');
-    
+    try {    
         const newUser = await prisma.user.create({
             data: { name, email, password }
         });

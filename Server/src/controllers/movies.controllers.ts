@@ -57,7 +57,12 @@ export const updateMovie = async (req: Request, res: Response) => {
     try {
         const updatedMovie = await prisma.movies.update({
             where: { id: movieId },
-            data: { name, poster_image, score, genres }
+            data: { 
+                name, 
+                poster_image, 
+                score, 
+                genres: { connect: genres.map((genre: String) => ({ id:genre })) }
+            }
     });
 
         res.status(201).json(updatedMovie);
