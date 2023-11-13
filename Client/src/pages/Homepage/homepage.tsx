@@ -14,13 +14,6 @@ const Homepage = () => {
                     </NavLink>
                 </section>
                 <MovieFrameComponent id="firstSwiper" movieSet="allMovies"/>
-                <section className="frame-title-wrapper">
-                    <div className="frame-title">My movies</div>
-                    <NavLink to={`/see-all?title=My movies`}>
-                        <button className="see-all-btn"><p className="see-all-text">See all</p></button>
-                    </NavLink>
-                </section>
-                <MovieFrameComponent id="secondSwiper" movieSet="myMovies"/>
             </main>
         </>
     )

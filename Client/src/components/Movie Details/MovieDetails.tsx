@@ -18,13 +18,6 @@ const MovieDetailsComponent = () => {
             </svg>
             <p className='text-manager'>Seen</p>
           </div>
-          <div className="details-watchlist">
-            <svg xmlns="http://www.w3.org/2000/svg" className="icon-manager icon-tabler icon-tabler-bookmark" width="25" height="25" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4z"></path>
-            </svg>
-            <p className='text-manager'>Watchlist</p>
-          </div>
         </article>
       </section>
       <section className='details-container'>
