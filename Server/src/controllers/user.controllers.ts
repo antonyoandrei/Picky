@@ -35,7 +35,9 @@ export const getUserById = async (req: Request, res: Response) => {
         const user = await prisma.user.findUnique({
             where: { id: userId }, 
             include: {
-                movies: true,
+                movies: {
+                    include: {genres: true}
+                }
             }
         })
 
