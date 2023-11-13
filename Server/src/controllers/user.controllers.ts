@@ -14,7 +14,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
         });
         res.status(201).json(allUsers);
     } catch (error) {
-        res.status(200).send('Get All Users');
+        res.status(200).send('Cannot find all users');
     }
 };
 
