@@ -1,14 +1,11 @@
 import { Router } from 'express';
-import { createGenre, getAllGenres, getGenreById, updateGenre, deleteGenre } from '../controllers/genres.controllers';
-import { check } from "../middleware/check.middleware";
+import { createGenre, getAllGenres, addGenreToMovieById, deleteGenre } from '../controllers/genres.controllers';
 
 const genresRoutes = Router();
 
 genresRoutes.get('/', getAllGenres);
-genresRoutes.get('/:genreId', getGenreById);
-genresRoutes.patch('/:genreId', updateGenre);
+genresRoutes.post('/', createGenre);
+genresRoutes.get('/:movieId/', addGenreToMovieById);
 genresRoutes.delete('/:genreId', deleteGenre);
-
-genresRoutes.post('/', check, createGenre);
 
 export default genresRoutes;

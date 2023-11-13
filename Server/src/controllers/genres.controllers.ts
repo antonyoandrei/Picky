@@ -13,50 +13,39 @@ export const getAllGenres = async (req: Request, res: Response) => {
 };
 
 export const createGenre = async (req: Request, res: Response) => {
-    const { name, userId } = req.body;
+    const { name } = req.body;
 
     try {
-        if (!name || !userId) {
-            throw new Error('Missing fields');
-        }
-
-        const genre = await prisma.genres.create({
-            data: { name }
-        });
-
+        const genre = await prisma.genres.create({ data: { name } });
         res.status(201).json(genre);
     } catch (error) {
         res.status(500).json(error);
     }
 };
 
-export const getGenreById = async (req: Request, res: Response) => {
-    const { genreId } = req.params;
-
+export const addGenreToMovieById = async (req: Request, res: Response) => {
+    const { movieId } = req.params;
+    const { genreId } = req.body;
+  
     try {
-        const genre = await prisma.genres.findUnique({
-            where: { id: genreId }
-        });
-
-        res.status(200).json(genre);
-    } catch (error) {
-        res.status(500).json(error);
+      const movie = await prisma.movies.findUnique({
+        where: { id: movieId },
+    });
+  
+    if (!movie) {
+        return res.status(404).json({ error: 'Movie not found' });
     }
-};
-
-export const updateGenre = async (req: Request, res: Response) => {
-    const { genreId } = req.params;
-    const { name } = req.body;
-
-    try {
-        const updatedGenre = await prisma.genres.update({
-            where: { id: genreId },
-            data: { name }
-        });
-
-        res.status(201).json(updatedGenre);
+  
+    const updatedMovie = await prisma.movies.update({
+        where: { id: movieId },
+        data: {
+          genres: {
+            connect: { id: genreId },
+        }}
+    });
+      res.status(200).json(updatedMovie);
     } catch (error) {
-        res.status(500).json(error);
+      res.status(500).json(error);
     }
 };
 
@@ -66,7 +55,7 @@ export const deleteGenre = async (req: Request, res: Response) => {
     try {
         const deletedGenre = await prisma.genres.delete({
             where: { id: genreId }
-        })
+        });
 
         res.status(200).json(deletedGenre);
     } catch (error) {

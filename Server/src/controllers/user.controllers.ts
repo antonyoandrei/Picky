@@ -10,11 +10,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(200).send('Get All Users');
     }
-
-};
-
-export const getAllUsersRegistered = (req: Request, res: Response) => {
-    res.status(200).send('Get All Users Registered');
 };
 
 export const createUser = async (req: Request, res: Response) => {
@@ -31,8 +26,6 @@ export const createUser = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json(error);
     }
-
-    res.status(200).send('Post: Create user');
 };
 
 export const getUserById = async (req: Request, res: Response) => {
@@ -66,8 +59,6 @@ export const updateUser = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json(error)
     }
-    
-    res.status(200).send('User updated');
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
@@ -81,5 +72,4 @@ export const deleteUser = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json(error);
     }
-
 };

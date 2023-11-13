@@ -5,10 +5,9 @@ import { check } from "../middleware/check.middleware";
 const moviesRoutes = Router();
 
 moviesRoutes.get('/', getAllMovies);
-moviesRoutes.get('/:userId', getMovieById);
-moviesRoutes.patch('/:userId', updateMovie);
-moviesRoutes.delete('/:userId', deleteMovie);
-
-moviesRoutes.post('/', check, createMovie);
+moviesRoutes.get('/:movieId', getMovieById);
+moviesRoutes.post('/:userId', createMovie);
+moviesRoutes.patch('/:movieId', updateMovie);
+moviesRoutes.delete('/:movieId', deleteMovie);
 
 export default moviesRoutes;
