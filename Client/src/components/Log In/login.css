@@ -11,6 +11,7 @@
     font-size: var(--fs-l);
     font-weight: var(--fw-medium);
     display: flex;
+    color: var(--secondary);
     gap: 1rem;
 }
 
@@ -82,8 +83,9 @@
     display: flex;
     gap: 0.5rem;
     font-size: var(--fs-r);
+    color: var(--secondary);
 }
 
 .register-link {
-    color: var(--clr-link);
+    color: var(--clr-link) !important;
 }

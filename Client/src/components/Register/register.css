@@ -10,6 +10,7 @@
 .register-title {
     font-size: var(--fs-l);
     font-weight: var(--fw-medium);
+    color: var(--secondary);
     display: flex;
     gap: 1rem;
     justify-content: center;

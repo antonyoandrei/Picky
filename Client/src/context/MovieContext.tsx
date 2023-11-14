@@ -9,22 +9,18 @@ export type MovieType = {
 
 type MovieSets = {
   allMovies: MovieType[];
-  myMovies: MovieType[];
 };
 
 type MovieContextType = {
   movieSets: MovieSets;
   addMovieToAll: (movie: MovieType) => void;
-  addMovieToMine: (movie: MovieType) => void;
 };
 
 export const MovieContext = createContext<MovieContextType>({
   movieSets: {
     allMovies: [],
-    myMovies: [],
   },
   addMovieToAll: () => {},
-  addMovieToMine: () => {},
 });
 
 type MovieProviderProps = {
@@ -34,7 +30,7 @@ type MovieProviderProps = {
 export const MovieProvider = ({ children }: MovieProviderProps) => {
   const [movieSets, setMovieSets] = useState<MovieSets>(() => {
     const localData = localStorage.getItem('movieSets');
-    return localData ? JSON.parse(localData) : { allMovies: [], myMovies: [] };
+    return localData ? JSON.parse(localData) : { allMovies: [] };
   });
 
   useEffect(() => {
@@ -52,19 +48,8 @@ export const MovieProvider = ({ children }: MovieProviderProps) => {
     });
   };
 
-  const addMovieToMine = (movie: MovieType) => {
-    setMovieSets((prevSets) => {
-      const updatedSets = {
-        ...prevSets,
-        myMovies: [...prevSets.myMovies, movie]
-      };
-      localStorage.setItem('movieSets', JSON.stringify(updatedSets));
-      return updatedSets;
-    });
-  };
-
   return (
-    <MovieContext.Provider value={{ movieSets, addMovieToAll, addMovieToMine }}>
+    <MovieContext.Provider value={{ movieSets, addMovieToAll }}>
       {children}
     </MovieContext.Provider>
   );

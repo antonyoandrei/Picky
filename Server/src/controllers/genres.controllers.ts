@@ -5,7 +5,12 @@ import prisma from '../db/client';
 
 export const getAllGenres = async (req: Request, res: Response) => {
     try {
-        const genres = await prisma.genres.findMany();
+        const genres = await prisma.genres.findMany({
+            select: {
+                name: true,
+                id: true
+            }
+        });
         res.status(200).json(genres);
     } catch (error) {
         res.status(500).json(error);
@@ -20,32 +25,6 @@ export const createGenre = async (req: Request, res: Response) => {
         res.status(201).json(genre);
     } catch (error) {
         res.status(500).json(error);
-    }
-};
-
-export const addGenreToMovieById = async (req: Request, res: Response) => {
-    const { movieId } = req.params;
-    const { genreId } = req.body;
-  
-    try {
-      const movie = await prisma.movies.findUnique({
-        where: { id: movieId },
-    });
-  
-    if (!movie) {
-        return res.status(404).json({ error: 'Movie not found' });
-    }
-  
-    const updatedMovie = await prisma.movies.update({
-        where: { id: movieId },
-        data: {
-          genres: {
-            connect: { id: genreId },
-        }}
-    });
-      res.status(200).json(updatedMovie);
-    } catch (error) {
-      res.status(500).json(error);
     }
 };
 

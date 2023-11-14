@@ -5,19 +5,27 @@ import prisma from '../db/client';
 export const getAllUsers = async (req: Request, res: Response) => {
 
     try {
-        const allUsers = await prisma.user.findMany();
+        const allUsers = await prisma.user.findMany({
+            include: {
+                movies: {
+                    include: {
+                        genres: {
+                            select: { genre: { select: { name: true, id: true } } } 
+                        },
+                    },
+                }
+            }
+        });
         res.status(201).json(allUsers);
     } catch (error) {
-        res.status(200).send('Get All Users');
+        res.status(200).send('Cannot find all users');
     }
 };
 
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
-    try {
-        if (!name || !email || !password) throw new Error ('Missing fields');
-    
+    try {    
         const newUser = await prisma.user.create({
             data: { name, email, password }
         });
@@ -36,7 +44,11 @@ export const getUserById = async (req: Request, res: Response) => {
             where: { id: userId }, 
             include: {
                 movies: {
-                    include: {genres: true}
+                    include: {
+                        genres: {
+                            select: { genre: { select: { name: true, id: true } } } 
+                        },
+                    },
                 }
             }
         })
