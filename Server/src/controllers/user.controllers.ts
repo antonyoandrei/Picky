@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import UserModel from '../model/user.model';
-import prisma from '../db/client';
+import { prismaClient } from '../db/client';
+import { convertToType } from '../helpers/utils';
 
 export const getAllUsers = async (req: Request, res: Response) => {
 
     try {
-        const allUsers = await prisma.user.findMany({
+        const allUsers = await prismaClient.user.findMany({
             include: {
                 movies: {
                     include: {
@@ -26,7 +27,7 @@ export const createUser = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
     try {    
-        const newUser = await prisma.user.create({
+        const newUser = await prismaClient.user.create({
             data: { name, email, password }
         });
     
@@ -40,8 +41,8 @@ export const getUserById = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     try {
-        const user = await prisma.user.findUnique({
-            where: { id: userId }, 
+        const user = await prismaClient.user.findUnique({
+            where: { id: convertToType(userId) }, 
             include: {
                 movies: {
                     include: {
@@ -64,8 +65,8 @@ export const updateUser = async (req: Request, res: Response) => {
     const { name, email } = req.body;
     
     try {
-        const updatedUser = await prisma.user.update({
-            where: { id: userId },
+        const updatedUser = await prismaClient.user.update({
+            where: { id: convertToType(userId) },
             data: { name, email }
         });
             
@@ -79,8 +80,8 @@ export const deleteUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     try {
-        const deletedUser = await prisma.user.delete({
-            where: { id: userId }
+        const deletedUser = await prismaClient.user.delete({
+            where: { id: convertToType(userId) }
         });
         res.status(204).json(deletedUser);
     } catch (error) {
