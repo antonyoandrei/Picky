@@ -8,7 +8,11 @@ export const getAllUsers = async (req: Request, res: Response) => {
         const allUsers = await prisma.user.findMany({
             include: {
                 movies: {
-                    include: {genres: true}
+                    include: {
+                        genres: {
+                            select: { genre: { select: { name: true, id: true } } } 
+                        },
+                    },
                 }
             }
         });
@@ -40,7 +44,11 @@ export const getUserById = async (req: Request, res: Response) => {
             where: { id: userId }, 
             include: {
                 movies: {
-                    include: {genres: true}
+                    include: {
+                        genres: {
+                            select: { genre: { select: { name: true, id: true } } } 
+                        },
+                    },
                 }
             }
         })
