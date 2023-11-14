@@ -74,6 +74,19 @@ export const updateMovie = async (req: Request, res: Response) => {
     const { name, poster_image, score, genres } = req.body;
 
     try {
+        const existingMovie = await prisma.movies.findUnique({
+            where: { id: movieId },
+            include: { genres: { select: { genre: { select: { name: true } } } } },
+        });
+
+        if (!existingMovie) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+
+        const existingGenres = existingMovie.genres.map((genre) => genre.genre?.name).filter(Boolean);
+
+        const newGenres = genres.filter((genre: { name: string; }) => !existingGenres.includes(genre.name));
+
         const updatedMovie = await prisma.movies.update({
             where: { id: movieId },
             data: {
@@ -81,7 +94,7 @@ export const updateMovie = async (req: Request, res: Response) => {
                 poster_image,
                 score,
                 genres: {
-                    create: genres.map((genre: { name: string }) => ({
+                    create: newGenres.map((genre: { name: string; }) => ({
                         genre: {
                             connectOrCreate: {
                                 where: { name: genre.name },
@@ -93,10 +106,11 @@ export const updateMovie = async (req: Request, res: Response) => {
             },
             include: {
                 genres: {
-                    select: { genre: { select: { name: true, id: true } } } 
+                    select: { genre: { select: { name: true, id: true } } },
                 },
             },
         });
+
         res.status(201).json(updatedMovie);
     } catch (error) {
         res.status(500).json(error);
