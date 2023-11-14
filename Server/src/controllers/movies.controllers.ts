@@ -123,7 +123,7 @@ export const deleteMovie = async (req: Request, res: Response) => {
 
     try {
         const deletedMovie = await prismaClient.movies.delete({
-            where: { id: movieId }
+            where: { id: convertToType(movieId) }
         });
 
         res.status(200).json(deletedMovie);
