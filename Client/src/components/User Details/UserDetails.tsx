@@ -1,19 +1,19 @@
 import { ChangeEvent, useState } from 'react';
 import './userdetails.css';
 import UserModalComponent from '../User Modal/UserModal';
+import { useAuth0, LogoutOptions } from '@auth0/auth0-react';
 
 const UserDetailsComponent = () => {
-  const storedUser = JSON.parse(localStorage.getItem('user') || '');
-  const { name } = storedUser || {};
-  const [imgSrc, setImgSrc] = useState(localStorage.getItem('userImg') || '');
+  const { user } = useAuth0();
+  const [, setImgSrc] = useState( user.picture || '');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { logout } = useAuth0();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
         const file = e.target.files[0];
         const url = URL.createObjectURL(file);
         setImgSrc(url);
-        localStorage.setItem('userImg', url)
         window.dispatchEvent(new Event('userImageUpdated'));
     }
   }
@@ -32,13 +32,6 @@ const UserDetailsComponent = () => {
     }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('userImg');
-    localStorage.removeItem('movieSets')
-    window.location.href = '/log-in';
-  }
-
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   }
@@ -46,7 +39,7 @@ const UserDetailsComponent = () => {
   return (
     <main className='user-component'>
       <article className='logout'>
-        <svg onClick={handleLogout} xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-logout" width="40" height="40" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <svg onClick={() => logout({ returnTo: window.location.origin } as LogoutOptions)} xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-logout" width="40" height="40" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
           <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"></path>
           <path d="M9 12h12l-3 -3"></path>
@@ -54,8 +47,8 @@ const UserDetailsComponent = () => {
         </svg>
       </article>
       <section className='user'>
-        <article className='user-img' style={imgSrc ? { backgroundImage: `url(${imgSrc})` } : {}}>
-          {!imgSrc && 
+        <article className='user-img' style={user.picture ? { backgroundImage: `url(${user.picture})` } : {}}>
+          {!user.picture && 
             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-user-details-hexagon" width="400" height="400" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" onMouseOver={handleMouseOver}>
               <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
               <path d="M12 13a3 3 0 1 0 0 -6a3 3 0 0 0 0 6z"></path>
@@ -74,7 +67,7 @@ const UserDetailsComponent = () => {
           </svg>
         </article>
         <article className="user-details">
-            <p className="username">{name}</p>
+            <p className="username">{user.name}</p>
             <button type="submit" className="profile-btn" onClick={toggleModal}>
               <p className="profile-btn-text">Edit profile</p>
             </button>

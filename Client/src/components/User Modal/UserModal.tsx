@@ -1,8 +1,5 @@
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../Auth/authContext';
 import './usermodal.css';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 type FormData = {
   email: string;
@@ -20,26 +17,14 @@ const UserModalComponent = ({ isVisible }: UserModalProps) => {
   const currentUser = { email: '', username: '', password: '' };
   const modalClassName = isVisible ? 'user-modal-component shown' : 'user-modal-component hidden'
 
-  const { register, handleSubmit, formState: { errors }, getValues } = useForm<FormData>({
+  const { register, formState: { errors }, getValues } = useForm<FormData>({
     defaultValues: currentUser,
     mode: "onChange"
   });
   
-  const { login } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  const onUpdate: SubmitHandler<FormData> = (data) => {
-    if (data.username !== currentUser.username) {
-      login(data.username, data.password, data.email);
-    }
-    navigate('/', {
-      replace: true
-    });
-  };
-  
   return (
     <section className={modalClassName}>
-      <form className="user-modal-form" onSubmit={handleSubmit(onUpdate)}>
+      <form className="user-modal-form">
         <input className="modal-input" type="text" placeholder="Update Email..." autoComplete="off" 
           {...register('email', { 
             required: 'Email is required',

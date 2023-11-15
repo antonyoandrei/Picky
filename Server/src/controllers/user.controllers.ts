@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import UserModel from '../model/user.model';
 import { prismaClient } from '../db/client';
 import { convertToType } from '../helpers/utils';
 

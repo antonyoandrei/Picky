@@ -1,21 +1,19 @@
 import { NavLink } from 'react-router-dom';
 import './header.css';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { AuthContext } from '../../Auth/authContext';
+import { useEffect, useRef, useState } from 'react';
 import ModalComponent from '../Add Modal/Modal';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const HeaderComponent = () => {
-  const { isLogged } = useContext(AuthContext);
-  const storedUser = localStorage.getItem('user');
-  const user = storedUser ? JSON.parse(storedUser) : {};
-  const { name } = user;
-  const [imgSrc, setImgSrc] = useState(localStorage.getItem('userImg') || '');
+  const { user, isAuthenticated } = useAuth0();
+  const [,setImgSrc] = useState(user?.picture || '');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const toggleButtonRef = useRef(null);
-  
+  const { loginWithRedirect } = useAuth0();
+
   useEffect(() => {
     const handleUserImageUpdate = () => {
-      setImgSrc(localStorage.getItem('userImg') || '');
+      setImgSrc(user?.picture || '');
     };
     window.addEventListener('userImageUpdated', handleUserImageUpdate);
     return () => {
@@ -33,12 +31,12 @@ const HeaderComponent = () => {
           <NavLink to={"/"}>
             <p className='logo'>Picky</p>
           </NavLink>
-          {isLogged ? (
+          {isAuthenticated ? (
             <article className="logged-wrapper">
-            <p className='logged-text'>Welcome back, {name}!</p>
+            <p className='logged-text'>Welcome back, {user?.name}!</p>
             <NavLink to={'/user'} className={"user-link-container"}>
-              {imgSrc ? (
-                <div style={{ backgroundImage: `url(${imgSrc})` }} className="user-avatar" />
+              {user?.picture ? (
+                <div style={{ backgroundImage: `url(${user.picture})` }} className="user-avatar" />
               ) : (
                 <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-user-hexagon" width="48" height="48" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -56,13 +54,11 @@ const HeaderComponent = () => {
             </svg>
           </article>
           ) : (
-            <NavLink to={'/log-in'}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-key" width="48" height="48" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z"></path>
-                <path d="M15 9h.01"></path>
-              </svg>
-            </NavLink>
+            <svg onClick={() => loginWithRedirect()} xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-key" width="48" height="48" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z"></path>
+              <path d="M15 9h.01"></path>
+            </svg>
           )}
           <ModalComponent isVisible={isModalVisible} toggleModal={toggleModal} toggleButtonRef={toggleButtonRef}/>
         </section>
