@@ -1,6 +1,4 @@
 import { Request, Response } from 'express';
-import MoviesModel from '../model/movies.model';
-import UserModel from '../model/user.model';
 import { prismaClient } from '../db/client';
 import { convertToType } from '../helpers/utils';
 

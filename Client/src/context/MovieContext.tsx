@@ -8,6 +8,7 @@ export type MovieType = {
 };
 
 type MovieSets = {
+  [x: string]: any;
   allMovies: MovieType[];
 };
 

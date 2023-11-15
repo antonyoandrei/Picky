@@ -3,7 +3,6 @@ import MovieFrameComponent from "../../components/Movie Frame/MovieFrame"
 import './homepage.css'
 
 const Homepage = () => {
-    
     return (
         <>
             <main className="home-wrapper">
