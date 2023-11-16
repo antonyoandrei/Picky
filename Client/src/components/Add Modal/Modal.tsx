@@ -87,7 +87,7 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
 
   return (
     <>
-    <Toaster
+      <Toaster
         position="top-right"
         toastOptions={{
           error: {
@@ -112,49 +112,49 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
           },
         }}
       />
-    <section ref={modalRef} className={modalClassName}>
-      <h3 className='modal-title'>Add a movie</h3>
-      <div className="movie-info">
-        <section className='cover-wrapper'>
-          <article className='cover-img' style={movie.imgSrc ? { backgroundImage: `url(${movie.imgSrc})` } : {}}>
-            {!movie.imgSrc && 
-              <img className='cover' src='https://res.cloudinary.com/du94mex28/image/upload/v1699002566/Picky/sans-affiche_hgymml.png'/>
-            }
-          </article>
-          <article className="cover-container">
-              <input className="modal-img-input" type="file" onChange={handleChange}/>
-              <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-upload" width="40" height="40" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                  <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
-                  <path d="M7 9l5 -5l5 5"></path>
-                  <path d="M12 4l0 12"></path>
-              </svg>
-          </article>
-        </section>
-        <form className="modal-form">
-          <input className="modal-input" type="text" placeholder="Title" autoComplete="off" 
-            name="title"
-            value={movie.title}
-            onChange={handleInputChange}
-          />
-          
-          <input className="modal-input" type="text" placeholder="Rating" autoComplete="off" 
-            name="rating"
-            value={movie.rating}
-            onChange={handleInputChange}
-          />
-          
-          <input className="modal-input" type="text" placeholder="Genres" autoComplete="off" 
-            name="genres"
-            value={movie.genres}
-            onChange={handleInputChange}
-          />
-        </form>
-      </div>  
-      <button type="button" className="modal-btn" onClick={onUpdate}>
-        <p className="modal-btn-text">Add movie</p>
-      </button>
-    </section>
+      <section ref={modalRef} className={modalClassName}>
+        <h3 className='modal-title'>Add a movie</h3>
+        <div className="movie-info">
+          <section className='cover-wrapper'>
+            <article className='cover-img' style={movie.imgSrc ? { backgroundImage: `url(${movie.imgSrc})` } : {}}>
+              {!movie.imgSrc && 
+                <img className='cover' src='https://res.cloudinary.com/du94mex28/image/upload/v1699002566/Picky/sans-affiche_hgymml.png'/>
+              }
+            </article>
+            <article className="cover-container">
+                <input className="modal-img-input" type="file" onChange={handleChange}/>
+                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-upload" width="40" height="40" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                    <path d="M7 9l5 -5l5 5"></path>
+                    <path d="M12 4l0 12"></path>
+                </svg>
+            </article>
+          </section>
+          <form className="modal-form">
+            <input className="modal-input" type="text" placeholder="Title" autoComplete="off" 
+              name="title"
+              value={movie.title}
+              onChange={handleInputChange}
+            />
+            
+            <input className="modal-input" type="text" placeholder="Rating" autoComplete="off" 
+              name="rating"
+              value={movie.rating}
+              onChange={handleInputChange}
+            />
+            
+            <input className="modal-input" type="text" placeholder="Genres" autoComplete="off" 
+              name="genres"
+              value={movie.genres}
+              onChange={handleInputChange}
+            />
+          </form>
+        </div>  
+        <button type="button" className="modal-btn" onClick={onUpdate}>
+          <p className="modal-btn-text">Add movie</p>
+        </button>
+      </section>
     </>
   );
 }

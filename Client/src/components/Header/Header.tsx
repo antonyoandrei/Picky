@@ -5,11 +5,10 @@ import ModalComponent from '../Add Modal/Modal';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const HeaderComponent = () => {
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated, loginWithRedirect } = useAuth0();
   const [,setImgSrc] = useState(user?.picture || '');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const toggleButtonRef = useRef(null);
-  const { loginWithRedirect } = useAuth0();
 
   useEffect(() => {
     const handleUserImageUpdate = () => {

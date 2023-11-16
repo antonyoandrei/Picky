@@ -1,36 +1,12 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import './userdetails.css';
 import UserModalComponent from '../User Modal/UserModal';
 import { useAuth0, LogoutOptions } from '@auth0/auth0-react';
 
 const UserDetailsComponent = () => {
   const { user } = useAuth0();
-  const [, setImgSrc] = useState( user.picture || '');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { logout } = useAuth0();
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-        const file = e.target.files[0];
-        const url = URL.createObjectURL(file);
-        setImgSrc(url);
-        window.dispatchEvent(new Event('userImageUpdated'));
-    }
-  }
-
-  const handleMouseOver = () => {
-    const iconUser = document.querySelector('.icon-tabler-user-details-hexagon') as HTMLElement;
-    if (iconUser) {
-      iconUser.style.opacity = '0';
-    }
-  }
-
-  const handleMouseOut = () => {
-    const iconUser = document.querySelector('.icon-tabler-user-details-hexagon') as HTMLElement;
-    if (iconUser) {
-      iconUser.style.opacity = '1';
-    }
-  }
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -49,22 +25,13 @@ const UserDetailsComponent = () => {
       <section className='user'>
         <article className='user-img' style={user.picture ? { backgroundImage: `url(${user.picture})` } : {}}>
           {!user.picture && 
-            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-user-details-hexagon" width="400" height="400" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" onMouseOver={handleMouseOver}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-user-details-hexagon" width="400" height="400" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
               <path d="M12 13a3 3 0 1 0 0 -6a3 3 0 0 0 0 6z"></path>
               <path d="M6.201 18.744a4 4 0 0 1 3.799 -2.744h4a4 4 0 0 1 3.798 2.741"></path>
               <path d="M19.875 6.27c.7 .398 1.13 1.143 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z"></path>
             </svg>
           }
-        </article>
-        <article onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} className="user-img-container">
-          <input className="img-input" type="file" onChange={handleChange}/>
-          <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-photo-hexagon" width="400" height="400" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-            <path d="M19.875 6.27c.7 .398 1.13 1.143 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z"></path>
-            <path d="M3.5 15.5l4.5 -4.5c.928 -.893 2.072 -.893 3 0l5 5"></path>
-            <path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l2.5 2.5"></path>
-          </svg>
         </article>
         <article className="user-details">
             <p className="username">{user.name}</p>
