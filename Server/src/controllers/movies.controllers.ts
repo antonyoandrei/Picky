@@ -20,7 +20,6 @@ export const getAllMovies = async (req: Request, res: Response) => {
 export const createMovie = async (req: Request, res: Response) => {
     const { name, poster_image, score, genres } = req.body;
     const { userId } = req.params;
-
     try {
         const movie = await prismaClient.movies.create({data:{
             name,
@@ -50,19 +49,19 @@ export const createMovie = async (req: Request, res: Response) => {
     }
 };
 
-export const getMovieById = async (req: Request, res: Response) => {
-    const { movieId } = req.params;
+export const getMoviesByUserId = async (req: Request, res: Response) => {
+    const { userId } = req.params;
 
     try {
-        const movie = await prismaClient.movies.findUnique({
-            where: { id: convertToType(movieId) },
+        const movies = await prismaClient.movies.findMany({
+            where: { userId: convertToType(userId) },
             include: {
                 genres: {
-                    select: { genre: { select: { name: true, id: true } } } 
+                    select: { genre: { select: { name: true, id: true } } }
                 },
             },
         });
-        res.status(200).json(movie);
+        res.status(200).json(movies);
     } catch (error) {
         res.status(500).json(error);
     }

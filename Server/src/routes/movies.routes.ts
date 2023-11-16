@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import { createMovie, getAllMovies, getMovieById, updateMovie, deleteMovie } from '../controllers/movies.controllers';
+import { createMovie, getAllMovies, getMoviesByUserId, updateMovie, deleteMovie } from '../controllers/movies.controllers';
+import { checkJwtMiddleware } from '../middlewares/checkJwt.middleware';
 
 const moviesRoutes = Router();
 
 moviesRoutes.get('/', getAllMovies);
-moviesRoutes.get('/:movieId', getMovieById);
-moviesRoutes.post('/:userId', createMovie);
+moviesRoutes.get('/user/:userId', getMoviesByUserId);
+moviesRoutes.post('/:userId', checkJwtMiddleware, createMovie);
 moviesRoutes.patch('/:movieId', updateMovie);
 moviesRoutes.delete('/:movieId', deleteMovie);
 

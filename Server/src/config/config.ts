@@ -1,39 +1,23 @@
 import dotenv from 'dotenv';
+import Configuration from '../interfaces/config.interfaces';
+dotenv.config();
 
-type TConfig = {
-    [key: string]: EnvironmentConfig;
-};
+const ENV = process.env.NODE_ENV || 'development';
 
-type EnvironmentConfig = {
-    app: AppConfig;
-    db: MongoDBConfig;
-}
-
-type AppConfig = {
-    PORT: string | number;
-}
-
-type MongoDBConfig = {
-    URI: string;
-}
-
-if (process.env.NODE_ENV === 'production') {
-    dotenv.config({path: '.env.production'})
-} else {
-    dotenv.config({path: '.env.development'})
-}
-
-const ENV = process.env.NODE_ENV ?? 'development';
-
-const CONFIG: TConfig = {
+const CONFIG: Configuration = {
     development: {
         app: {
             PORT: process.env.PORT || 4001
         },
         db: {
-            URI:
+            uri:
                 process.env.MONGO_URI_DEV ||
                 'mongodb://localhost:27017/test_development'
+        },
+        auth0: {
+            client_origin: process.env.APP_ORIGIN,
+            audience: process.env.AUTH0_AUDIENCE,
+            issuer: process.env.AUTH0_ISSUER
         }
     },
     production: {
@@ -41,9 +25,14 @@ const CONFIG: TConfig = {
             PORT: process.env.PORT || 4002
         },
         db: {
-            URI:
+            uri:
                 process.env.MONGO_URI_DEV ||
                 'mongodb://localhost:27017/test_production'
+        },
+        auth0: {
+            client_origin: process.env.APP_ORIGIN,
+            audience: process.env.AUTH0_AUDIENCE,
+            issuer: process.env.AUTH0_ISSUER
         }
     }
 }
