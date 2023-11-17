@@ -4,7 +4,6 @@ import userRoutes from './routes/user.routes';
 import moviesRoutes from './routes/movies.routes';
 import genresRoutes from './routes/genres.routes';
 import errorHandler from './middlewares/error.middleware';
-import { checkJwtMiddleware } from './middlewares/checkJwt.middleware';
 import morgan from 'morgan';
 
 const app = express();

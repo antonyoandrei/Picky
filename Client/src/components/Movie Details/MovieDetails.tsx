@@ -3,17 +3,19 @@ import imdb from '../../assets/imdb.logo.svg'
 import { useState, useEffect } from 'react';
 import { deleteMovieById, fetchMovieById } from '../../services/movies.service';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useParams } from 'react-router-dom';
 
-const MovieDetailsComponent = ({ movieId }) => {
+const MovieDetailsComponent = () => {
   const [movieDetails, setMovieDetails] = useState(null);
   const [isSeen, setIsSeen] = useState(false);
   const { getAccessTokenSilently } = useAuth0();
+  const { movieId } = useParams();
 
   useEffect(() => {
     const fetchDetails = async () => {
       const token = await getAccessTokenSilently();
       try {
-        const details = await fetchMovieById(token);
+        const details = await fetchMovieById(token, +movieId);
         setMovieDetails(details);
         const storedIsSeen = localStorage.getItem(`seen_${movieId}`);
         if (storedIsSeen !== null) {
@@ -29,7 +31,7 @@ const MovieDetailsComponent = ({ movieId }) => {
   const handleDeleteClick = async () => {
     const token = await getAccessTokenSilently();
     try {
-      const isDeleted = await deleteMovieById(token);
+      const isDeleted = await deleteMovieById(token, +movieId);
       if (isDeleted) {
         window.location.href = '/';
       } else {

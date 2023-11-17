@@ -1,15 +1,15 @@
 import { FormData } from "../components/Add Modal/Modal";
 
-export const createMovie = async (movie: FormData, token: string) => {
+export const createMovie = async (movie: FormData, token: string, userId: number) => {
     const {VITE_API_URL: url} = import.meta.env
     try {
-        const response = await fetch(`${url}/movie/6`, {
+        const response = await fetch(`${url}/movie/${userId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 authorization: `Bearer ${token}`,
             },
-            body:JSON.stringify({
+            body: JSON.stringify({
                 name: movie.title,
                 poster_image: movie.imgSrc,
                 score: movie.rating,
@@ -23,10 +23,10 @@ export const createMovie = async (movie: FormData, token: string) => {
     }
 }
 
-export const fetchMovies = async (token: string) => {
+export const fetchMovies = async (token: string, userId: number) => {
     const { VITE_API_URL: url } = import.meta.env;
     try {
-        const response = await fetch(`${url}/movie/user/6`, {
+        const response = await fetch(`${url}/movie/user/${userId}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -46,10 +46,10 @@ export const fetchMovies = async (token: string) => {
     }
 };
 
-export const fetchMovieById = async (token: string) => {
+export const fetchMovieById = async (token: string, movieId: number) => {
     const { VITE_API_URL: url } = import.meta.env;
     try {
-        const response = await fetch(`${url}/movie/54`, {
+        const response = await fetch(`${url}/movie/${movieId}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -69,10 +69,10 @@ export const fetchMovieById = async (token: string) => {
     }
 };
 
-export const deleteMovieById = async (token: string) => {
+export const deleteMovieById = async (token: string, movieId: number) => {
     const { VITE_API_URL: url } = import.meta.env;
     try {
-        const response = await fetch(`${url}/movie/54`, {
+        const response = await fetch(`${url}/movie/${movieId}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${token}`,

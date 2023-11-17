@@ -1,8 +1,10 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import { fetchMovies } from '../services/movies.service';
+import { useUserContext } from '../utils/useUserContext';
 
 export type MovieType = {
+  id: number;
   title: string;
   rating: number;
   genres: string;
@@ -33,11 +35,12 @@ type MovieProviderProps = {
 const MovieProvider = ({ children }: MovieProviderProps) => {
   const [movieSets, setMovieSets] = useState<MovieSets>(() => ({ allMovies: [] }));
   const { isAuthenticated, user, loginWithRedirect } = useAuth0();
+  const { currentUser } = useUserContext();
 
   useEffect(() => {
     const fetchMoviesForUser = async () => {
         try {
-            const moviesData = await fetchMovies(user?.idToken || '');
+            const moviesData = await fetchMovies(user?.idToken || '', currentUser.id);
             setMovieSets((prevSets) => ({
                 ...prevSets,
                 allMovies: moviesData,
@@ -50,7 +53,7 @@ const MovieProvider = ({ children }: MovieProviderProps) => {
     if (isAuthenticated && user) {
         fetchMoviesForUser();
     }
-}, [isAuthenticated, user]);
+}, [isAuthenticated, user, currentUser]);
 
   const addMovieToAll = (movie: MovieType) => {
     if (isAuthenticated && user) {
@@ -69,6 +72,7 @@ const MovieProvider = ({ children }: MovieProviderProps) => {
     </MovieContext.Provider>
   );
 };
+
 const { VITE_AUTH0_DOMAIN: domain, VITE_AUTH0_CLIENT_ID: clientId, VITE_AUTH0_AUDIENCE: audience } = import.meta.env;
 const redirectUri = window.location.origin
 

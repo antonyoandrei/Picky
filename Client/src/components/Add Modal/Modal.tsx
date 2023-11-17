@@ -5,6 +5,7 @@ import { MovieContext, MovieType } from '../../context/MovieContext';
 import toast, { Toaster } from 'react-hot-toast';
 import { createMovie } from '../../services/movies.service';
 import { useAuth0 } from '@auth0/auth0-react';
+import { userContext } from '../../context/UserContext';
 
 export type FormData = {
   title: string;
@@ -26,6 +27,7 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
   const { addMovieToAll } = useContext(MovieContext);
   const {getAccessTokenSilently}= useAuth0()
   const navigate = useNavigate();
+  const { currentUser} = useContext(userContext);
 
   const onUpdate = async () => {
     const parsedRating = parseFloat(movie.rating);
@@ -42,7 +44,8 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
         toggleModal();
         setMovie({ title: '', rating: '', genres: '', imgSrc: '' }); 
         const token = await getAccessTokenSilently();
-        await createMovie(movie, token);
+        const userId = currentUser.id
+        await createMovie(movie, token, userId);
         toast.success('Movie added successfully!');
         console.log(token);
       } else {

@@ -13,7 +13,7 @@ const RoutesComponent: FC = () => {
             <Route path="/*" element={
                 <PrivateRoutes>
                     <Routes>
-                        <Route path='/details' element={<Details />} />
+                        <Route path='/details/:movieId' element={<Details />} />
                         <Route path='/see-all' element={<SeeAll />} />
                     </Routes>
                 </PrivateRoutes>
