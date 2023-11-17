@@ -40,6 +40,9 @@ const MovieProvider = ({ children }: MovieProviderProps) => {
   useEffect(() => {
     const fetchMoviesForUser = async () => {
         try {
+          if (!user || !currentUser) {
+            return;
+        }
             const moviesData = await fetchMovies(user?.idToken || '', currentUser.id);
             setMovieSets((prevSets) => ({
                 ...prevSets,

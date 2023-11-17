@@ -8,6 +8,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { userContext } from '../../context/UserContext';
 
 export type FormData = {
+  id: number;
   title: string;
   rating: string;
   genres: string;
@@ -22,7 +23,7 @@ type UserModalProps = {
 
 const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalProps & { toggleButtonRef: React.RefObject<SVGSVGElement> }) => {
   const modalClassName = isVisible ? 'modal-component shown' : 'modal-component hidden';
-  const [movie, setMovie] = useState<FormData>({ title: '', rating: '', genres: '', imgSrc: localStorage.getItem('movieImg') || '' });
+  const [movie, setMovie] = useState<FormData>({ id: 0, title: '', rating: '', genres: '', imgSrc: '' });
   const modalRef = useRef<HTMLDivElement>(null);
   const { addMovieToAll } = useContext(MovieContext);
   const {getAccessTokenSilently}= useAuth0()
@@ -38,11 +39,12 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
           rating: parsedRating,
           genres: movie.genres,
           imgSrc: movie.imgSrc,
+          id: movie.id
         };
         addMovieToAll(newMovie);
         navigate('/', { replace: true });
         toggleModal();
-        setMovie({ title: '', rating: '', genres: '', imgSrc: '' }); 
+        setMovie({ title: '', rating: '', genres: '', imgSrc: '', id: movie.id }); 
         const token = await getAccessTokenSilently();
         const userId = currentUser.id
         await createMovie(movie, token, userId);
@@ -57,7 +59,7 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
     }
   };
 
-  const handleChange =  (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       const url = URL.createObjectURL(file);
