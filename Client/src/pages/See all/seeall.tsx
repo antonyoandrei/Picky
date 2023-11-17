@@ -1,23 +1,17 @@
 import { Key, useContext } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { MovieContext } from "../../context/MovieContext";
 import './seeall.css'
 
-function useQuery() {
-    return new URLSearchParams(useLocation().search);
-}
 
 const SeeAll = () => {
-    const query = useQuery();
-    const title = query.get("title") || "";
-
     const { movieSets } = useContext(MovieContext);
-    const movies = title === "All movies" ? movieSets.allMovies : movieSets.myMovies;
+    const movies = movieSets.allMovies;
 
     return (
         <>
             <main className="see-all-component">
-                <h1 className="see-all-title">{title}</h1>
+                <h1 className="see-all-title">All movies</h1>
                 {movies.length > 0 ? (
                   <section className="movies-wrapper">
                       {movies.map((movie: { imgSrc: string; title: string; }, index: Key) => (

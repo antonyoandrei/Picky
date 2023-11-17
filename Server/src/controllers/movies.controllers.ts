@@ -67,6 +67,30 @@ export const getMoviesByUserId = async (req: Request, res: Response) => {
     }
 };
 
+export const getMovieById = async (req: Request, res: Response) => {
+    const { movieId } = req.params;
+
+    try {
+        const movie = await prismaClient.movies.findUnique({
+            where: { id: convertToType(movieId) },
+            include: {
+                genres: {
+                    select: { genre: { select: { name: true, id: true } } }
+                },
+            },
+        });
+
+        if (!movie) {
+            return res.status(404).json({ error: 'Movie not found' });
+        }
+
+        res.status(200).json(movie);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 export const updateMovie = async (req: Request, res: Response) => {
     const { movieId } = req.params;
     const { name, poster_image, score, genres } = req.body;

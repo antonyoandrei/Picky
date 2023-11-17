@@ -29,23 +29,28 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
 
   const onUpdate = async () => {
     const parsedRating = parseFloat(movie.rating);
-
-    if (movie.title && !isNaN(parsedRating) && movie.genres && movie.imgSrc) {
-      const newMovie: MovieType = {
-        title: movie.title,
-        rating: parsedRating,
-        genres: movie.genres,
-        imgSrc: movie.imgSrc,
-      };
-      addMovieToAll(newMovie);
-      navigate('/', { replace: true });
-      toggleModal();
-      setMovie({ title: '', rating: '', genres: '', imgSrc: '' }); 
-      const token = await getAccessTokenSilently()
-      await createMovie(movie, token)
-      toast.success('Movie added successfully!')
-    } else {
-      toast.error('All fields are required and rating must be a number.');
+    try {
+      if (movie.title && !isNaN(parsedRating) && movie.genres && movie.imgSrc) {
+        const newMovie: MovieType = {
+          title: movie.title,
+          rating: parsedRating,
+          genres: movie.genres,
+          imgSrc: movie.imgSrc,
+        };
+        addMovieToAll(newMovie);
+        navigate('/', { replace: true });
+        toggleModal();
+        setMovie({ title: '', rating: '', genres: '', imgSrc: '' }); 
+        const token = await getAccessTokenSilently();
+        await createMovie(movie, token);
+        toast.success('Movie added successfully!');
+        console.log(token);
+      } else {
+        toast.error('All fields are required, and rating must be a number.');
+      }
+    } catch (error) {
+      console.error('Error creating movie:', error);
+      toast.error('An error occurred while adding the movie.');
     }
   };
 

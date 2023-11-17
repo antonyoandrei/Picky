@@ -33,6 +33,7 @@
 
 .text-manager {
     color: var(--clr-yellow);
+    cursor: pointer;
 }
 
 .details-seen {
@@ -59,6 +60,7 @@
     font-size: var(--fs-xl);
     color: var(--secondary);
     font-weight: var(--fw-black);
+    text-transform: uppercase;
 }
 
 .icon-tabler-trash-x {

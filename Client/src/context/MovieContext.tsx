@@ -1,4 +1,6 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
+import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
+import { fetchMovies } from '../services/movies.service';
 
 export type MovieType = {
   title: string;
@@ -28,25 +30,37 @@ type MovieProviderProps = {
   children: ReactNode;
 };
 
-export const MovieProvider = ({ children }: MovieProviderProps) => {
-  const [movieSets, setMovieSets] = useState<MovieSets>(() => {
-    const localData = localStorage.getItem('movieSets');
-    return localData ? JSON.parse(localData) : { allMovies: [] };
-  });
+const MovieProvider = ({ children }: MovieProviderProps) => {
+  const [movieSets, setMovieSets] = useState<MovieSets>(() => ({ allMovies: [] }));
+  const { isAuthenticated, user, loginWithRedirect } = useAuth0();
 
   useEffect(() => {
-    localStorage.setItem('movieSets', JSON.stringify(movieSets));
-  }, [movieSets]);
+    const fetchMoviesForUser = async () => {
+        try {
+            const moviesData = await fetchMovies(user?.idToken || '');
+            setMovieSets((prevSets) => ({
+                ...prevSets,
+                allMovies: moviesData,
+            }));
+        } catch (error) {
+            console.error('Error fetching movies:', error);
+        }
+    };
+
+    if (isAuthenticated && user) {
+        fetchMoviesForUser();
+    }
+}, [isAuthenticated, user]);
 
   const addMovieToAll = (movie: MovieType) => {
-    setMovieSets((prevSets) => {
-      const updatedSets = {
+    if (isAuthenticated && user) {
+      setMovieSets((prevSets) => ({
         ...prevSets,
-        allMovies: [...prevSets.allMovies, movie]
-      };
-      localStorage.setItem('movieSets', JSON.stringify(updatedSets));
-      return updatedSets;
-    });
+        allMovies: [...prevSets.allMovies, movie],
+      }));
+    } else {
+      loginWithRedirect();
+    }
   };
 
   return (
@@ -55,3 +69,19 @@ export const MovieProvider = ({ children }: MovieProviderProps) => {
     </MovieContext.Provider>
   );
 };
+const { VITE_AUTH0_DOMAIN: domain, VITE_AUTH0_CLIENT_ID: clientId, VITE_AUTH0_AUDIENCE: audience } = import.meta.env;
+const redirectUri = window.location.origin
+
+export const AuthenticatedMovieProvider = ({ children }: MovieProviderProps) => (
+  <Auth0Provider 
+            domain={domain}
+            clientId={clientId}
+            authorizationParams={{
+                redirect_uri: redirectUri,
+                audience: audience
+                }}>
+    <MovieProvider>{children}</MovieProvider>
+  </Auth0Provider>
+);
+
+export default AuthenticatedMovieProvider;

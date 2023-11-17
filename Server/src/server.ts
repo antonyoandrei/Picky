@@ -11,9 +11,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
-app.use(errorHandler)
 app.use("/user", userRoutes);
-app.use("/movie", checkJwtMiddleware, moviesRoutes);
+app.use("/movie", moviesRoutes);
 app.use("/genre", genresRoutes);
+app.use(errorHandler)
 
 export default app;
