@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { prismaClient } from '../db/client';
 import { convertToType } from '../helpers/utils';
+import { uploadImage } from '../helpers/cloudinary';
 
 export const getAllMovies = async (req: Request, res: Response) => {
     try {
@@ -151,4 +152,15 @@ export const deleteMovie = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json(error);
     }
+};
+
+export const uploadImageWithCloudinary = async (req: Request, res: Response) => {
+    const image = req.files?.poster_image
+    let imageUploaded = null
+    if (image) {
+        if ("tempFilePath" in image) {
+            imageUploaded = await uploadImage(image.tempFilePath)
+        }
+    }
+    res.status(200).send({ message: "Uploaded successfully", data: imageUploaded});
 };
