@@ -1,6 +1,5 @@
 import './modal.css';
 import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { MovieContext, MovieType } from '../../context/MovieContext';
 import toast, { Toaster } from 'react-hot-toast';
 import { createMovie } from '../../services/movies.service';
@@ -27,7 +26,6 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
   const modalRef = useRef<HTMLDivElement>(null);
   const { addMovieToAll } = useContext(MovieContext);
   const {getAccessTokenSilently}= useAuth0()
-  const navigate = useNavigate();
   const { currentUser} = useContext(userContext);
 
   const onUpdate = async () => {
@@ -41,18 +39,15 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
           imgSrc: movie.imgSrc,
           id: movie.id
         };
-        addMovieToAll(newMovie);
-        navigate('/', { replace: true });
-        toggleModal();
-        setMovie({ title: '', rating: '', genres: '', imgSrc: '', id: movie.id }); 
-        const token = await getAccessTokenSilently();
-        const userId = currentUser.id
-        await createMovie(movie, token, userId);
-        toast.success('Movie added successfully!');
-        console.log(token);
-      } else {
-        toast.error('All fields are required, and rating must be a number.');
-      }
+      const token = await getAccessTokenSilently();
+      const userId = currentUser.id;
+      window.location.reload();
+      await createMovie(movie, token, userId);
+      addMovieToAll(newMovie);
+      setMovie({ title: '', rating: '', genres: '', imgSrc: '', id: movie.id });
+    } else {
+      toast.error('All fields are required, and rating must be a number.');
+    }
     } catch (error) {
       console.error('Error creating movie:', error);
       toast.error('An error occurred while adding the movie.');
