@@ -3,7 +3,6 @@ import { FC } from 'react';
 import Details from '../pages/Details/details';
 import Homepage from '../pages/Homepage/homepage';
 import SeeAll from '../pages/See all/seeall';
-import User from '../pages/User/user';
 import PrivateRoutes from './PrivateRoutes';
 
 const RoutesComponent: FC = () => {
@@ -14,9 +13,8 @@ const RoutesComponent: FC = () => {
             <Route path="/*" element={
                 <PrivateRoutes>
                     <Routes>
-                        <Route path='/details' element={<Details />} />
+                        <Route path='/details/:movieId' element={<Details />} />
                         <Route path='/see-all' element={<SeeAll />} />
-                        <Route path='/user' element={<User />} />
                     </Routes>
                 </PrivateRoutes>
             } />

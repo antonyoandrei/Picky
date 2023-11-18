@@ -1,10 +1,13 @@
 import './modal.css';
 import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { MovieContext, MovieType } from '../../context/MovieContext';
 import toast, { Toaster } from 'react-hot-toast';
+import { createMovie } from '../../services/movies.service';
+import { useAuth0 } from '@auth0/auth0-react';
+import { userContext } from '../../context/UserContext';
 
-type FormData = {
+export type FormData = {
+  id: number;
   title: string;
   rating: string;
   genres: string;
@@ -19,30 +22,35 @@ type UserModalProps = {
 
 const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalProps & { toggleButtonRef: React.RefObject<SVGSVGElement> }) => {
   const modalClassName = isVisible ? 'modal-component shown' : 'modal-component hidden';
-  const [movie, setMovie] = useState<FormData>({ title: '', rating: '', genres: '', imgSrc: localStorage.getItem('movieImg') || '' });
+  const [movie, setMovie] = useState<FormData>({ id: 0, title: '', rating: '', genres: '', imgSrc: '' });
   const modalRef = useRef<HTMLDivElement>(null);
   const { addMovieToAll } = useContext(MovieContext);
-  
-  const navigate = useNavigate();
+  const {getAccessTokenSilently}= useAuth0()
+  const { currentUser} = useContext(userContext);
 
-  const onUpdate = () => {
+  const onUpdate = async () => {
     const parsedRating = parseFloat(movie.rating);
-
-    if (movie.title && !isNaN(parsedRating) && movie.genres && movie.imgSrc) {
-      const newMovie: MovieType = {
-        title: movie.title,
-        rating: parsedRating,
-        genres: movie.genres,
-        imgSrc: movie.imgSrc,
-      };
+    try {
+      if (movie.title && !isNaN(parsedRating) && movie.genres && movie.imgSrc) {
+        const newMovie: MovieType = {
+          title: movie.title,
+          rating: parsedRating,
+          genres: movie.genres,
+          imgSrc: movie.imgSrc,
+          id: movie.id
+        };
+      const token = await getAccessTokenSilently();
+      const userId = currentUser.id;
+      window.location.reload();
+      await createMovie(movie, token, userId);
       addMovieToAll(newMovie);
-      navigate('/', { replace: true });
-      toggleModal();
-      setMovie({ title: '', rating: '', genres: '', imgSrc: '' }); 
-      localStorage.removeItem('movieImg'); 
-      toast.success('Movie added successfully!')
+      setMovie({ title: '', rating: '', genres: '', imgSrc: '', id: movie.id });
     } else {
-      toast.error('All fields are required and rating must be a number.');
+      toast.error('All fields are required, and rating must be a number.');
+    }
+    } catch (error) {
+      console.error('Error creating movie:', error);
+      toast.error('An error occurred while adding the movie.');
     }
   };
 
@@ -51,7 +59,6 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
       const file = e.target.files[0];
       const url = URL.createObjectURL(file);
       setMovie({ ...movie, imgSrc: url });
-      localStorage.setItem('movieImg', url);
       window.dispatchEvent(new Event('movieImageUpdated'));
     }
   };

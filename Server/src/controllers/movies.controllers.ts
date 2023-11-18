@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { prismaClient } from '../db/client';
 import { convertToType } from '../helpers/utils';
+import { uploadImage } from '../helpers/cloudinary';
 
 export const getAllMovies = async (req: Request, res: Response) => {
     try {
@@ -20,7 +21,6 @@ export const getAllMovies = async (req: Request, res: Response) => {
 export const createMovie = async (req: Request, res: Response) => {
     const { name, poster_image, score, genres } = req.body;
     const { userId } = req.params;
-
     try {
         const movie = await prismaClient.movies.create({data:{
             name,
@@ -50,6 +50,24 @@ export const createMovie = async (req: Request, res: Response) => {
     }
 };
 
+export const getMoviesByUserId = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+
+    try {
+        const movies = await prismaClient.movies.findMany({
+            where: { userId: convertToType(userId) },
+            include: {
+                genres: {
+                    select: { genre: { select: { name: true, id: true } } }
+                },
+            },
+        });
+        res.status(200).json(movies);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+};
+
 export const getMovieById = async (req: Request, res: Response) => {
     const { movieId } = req.params;
 
@@ -58,13 +76,19 @@ export const getMovieById = async (req: Request, res: Response) => {
             where: { id: convertToType(movieId) },
             include: {
                 genres: {
-                    select: { genre: { select: { name: true, id: true } } } 
+                    select: { genre: { select: { name: true, id: true } } }
                 },
             },
         });
+
+        if (!movie) {
+            return res.status(404).json({ error: 'Movie not found' });
+        }
+
         res.status(200).json(movie);
     } catch (error) {
-        res.status(500).json(error);
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
@@ -128,4 +152,15 @@ export const deleteMovie = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json(error);
     }
+};
+
+export const uploadImageWithCloudinary = async (req: Request, res: Response) => {
+    const image = req.files?.poster_image
+    let imageUploaded = null
+    if (image) {
+        if ("tempFilePath" in image) {
+            imageUploaded = await uploadImage(image.tempFilePath)
+        }
+    }
+    res.status(200).send({ message: "Uploaded successfully", data: imageUploaded});
 };
