@@ -63,7 +63,7 @@ const MovieDetailsComponent = () => {
   return (
     <main className='details-component'>
       <section className='details-cover-container'>
-        <img className='details-cover' src={movieDetails.imgSrc || 'https://res.cloudinary.com/du94mex28/image/upload/v1699002566/Picky/sans-affiche_hgymml.png'} alt={movieDetails?.title} />
+        <img className='details-cover' src={movieDetails.poster_image || 'https://res.cloudinary.com/du94mex28/image/upload/v1699002566/Picky/sans-affiche_hgymml.png'} alt={movieDetails?.title} />
         <article className='details-manager'>
         <div className="details-seen" onClick={handleClick}>
           {isSeen ? (

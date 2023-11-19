@@ -8,7 +8,7 @@ moviesRoutes.get('/', getAllMovies);
 moviesRoutes.get('/user/:userId', getMoviesByUserId);
 moviesRoutes.get('/:movieId', getMovieById);
 moviesRoutes.post('/:userId', createMovie);
-moviesRoutes.post('/upload', uploadImageWithCloudinary);
+moviesRoutes.post('/upload/image', uploadImageWithCloudinary);
 moviesRoutes.patch('/:movieId', updateMovie);
 moviesRoutes.delete('/:movieId', deleteMovie);
 

@@ -5,6 +5,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { createMovie } from '../../services/movies.service';
 import { useAuth0 } from '@auth0/auth0-react';
 import { userContext } from '../../context/UserContext';
+import { uploadRequest } from '../../services/upload.service';
 
 export type FormData = {
   id: number;
@@ -25,18 +26,21 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
   const [movie, setMovie] = useState<FormData>({ id: 0, title: '', rating: '', genres: '', imgSrc: '' });
   const modalRef = useRef<HTMLDivElement>(null);
   const { addMovieToAll } = useContext(MovieContext);
-  const {getAccessTokenSilently}= useAuth0()
+  const {getAccessTokenSilently}= useAuth0();
   const { currentUser} = useContext(userContext);
+  const [file, setfile] = useState<File>();
 
   const onUpdate = async () => {
     const parsedRating = parseFloat(movie.rating);
+    const cloudinaryImageUrl = await uploadRequest(file);
     try {
       if (movie.title && !isNaN(parsedRating) && movie.genres && movie.imgSrc) {
         const newMovie: MovieType = {
           title: movie.title,
           rating: parsedRating,
           genres: movie.genres,
-          imgSrc: movie.imgSrc,
+          imgSrc: cloudinaryImageUrl,
+          poster_image: cloudinaryImageUrl,
           id: movie.id
         };
       const token = await getAccessTokenSilently();
@@ -44,7 +48,7 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
       window.location.reload();
       await createMovie(movie, token, userId);
       addMovieToAll(newMovie);
-      setMovie({ title: '', rating: '', genres: '', imgSrc: '', id: movie.id });
+      setMovie({ title: '', rating: '', genres: '', imgSrc: '', id: 0 });
     } else {
       toast.error('All fields are required, and rating must be a number.');
     }
@@ -54,12 +58,16 @@ const ModalComponent = ({ isVisible, toggleModal, toggleButtonRef }: UserModalPr
     }
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const url = URL.createObjectURL(file);
-      setMovie({ ...movie, imgSrc: url });
-      window.dispatchEvent(new Event('movieImageUpdated'));
+  const handleChange = async (e: ChangeEvent<HTMLInputElement> | null) => {
+    if (e && e.target && e.target.files && e.target.files.length !== null) {
+        const file = e.target.files[0];
+        setfile(file);
+        const cloudinaryImageUrl = await uploadRequest(file);
+        setMovie((prevData) => ({
+            ...prevData,
+            imgSrc: cloudinaryImageUrl,
+        }));
+        window.dispatchEvent(new Event('movieImageUpdated'));
     }
   };
 
