@@ -9,6 +9,7 @@ export type MovieType = {
   rating: number;
   genres: string;
   imgSrc: string;
+  poster_image: string;
 };
 
 type MovieSets = {
