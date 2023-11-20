@@ -5,7 +5,8 @@ import moviesRoutes from './routes/movies.routes';
 import genresRoutes from './routes/genres.routes';
 import errorHandler from './middlewares/error.middleware';
 import morgan from 'morgan';
-import FileUpload from 'express-fileupload'
+import FileUpload from 'express-fileupload';
+import { checkJwtMiddleware } from './middlewares/checkJwt.middleware';
 
 const app = express();
 app.use(express.json());
@@ -18,7 +19,7 @@ app.use(FileUpload({
     abortOnLimit: true
 }));
 app.use("/user", userRoutes);
-app.use("/movie", moviesRoutes);
+app.use("/movie", checkJwtMiddleware, moviesRoutes);
 app.use("/genre", genresRoutes);
 app.use(errorHandler)
 
